@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 
-const header = 'Check out our course material'
+const header = 'Check out the course material'
 const description = `we wont you to be sure before making any commitments, so be sure to check out
  the videos and coding challenges and see if you like what you see`
 </script>
