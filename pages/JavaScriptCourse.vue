@@ -4,7 +4,7 @@
       <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
         <div class="lg:pr-8 lg:pt-4">
           <div class="lg:max-w-lg">
-            <h2 class="text-base/7 font-semibold text-indigo-400">Beginner</h2>
+            <h2 class="text-base/7 font-semibold text-indigo-400">Video Series</h2>
             <p class="mt-2 text-pretty text-4xl font-semibold tracking-tight text-white sm:text-5xl">
               {{ title }}
             </p>
@@ -27,31 +27,52 @@
       </div>
     </div>
   </div>
+
+  <!-- <TableOfContents /> -->
+
+  <!-- <TableOfContentsV2 /> -->
+
+  <TableOfContentsV3 />
+
+  <TOCV5 />
 </template>
 
 <script setup>
-import { CloudArrowUpIcon, LockClosedIcon, ServerIcon } from '@heroicons/vue/20/solid'
+import {
+   CloudArrowUpIcon, LockClosedIcon, ServerIcon, ChartBarIcon, PlayCircleIcon, QuestionMarkCircleIcon,
+   ClockIcon, ChatBubbleBottomCenterTextIcon, RectangleStackIcon,
+} from '@heroicons/vue/20/solid'
+import TableOfContents from '../src/components/TableOfContents.vue'
+import TableOfContentsV2 from '../src/components/TableOfContentsV2.vue'
+import TableOfContentsV3 from '../src/components/TableOfContentsV3.vue'
+import TOCV5 from '../src/components/TOCV5.vue'
 
 const title = 'JavaScript Fundamentals'
 
-const description = 'Learn the entire fundamentals of JavaScript so you can start building apps with all the best practises'
+const description = 'Learn the entire fundamentals of JavaScript so you can start coding apps with all the best practises'
 
 const features = [
   {
-    name: 'Inteview questions and answers.',
-    description:
-      'Learn the most common interview questions and answers for JavaScript',
-    icon: CloudArrowUpIcon,
+    name: 'Beginner',
+    icon: ChartBarIcon,
   },
   {
-    name: 'A layer deeper. Not just what, but why and best practises',
-    description: 'Not just what, but why and best practises',
-    icon: LockClosedIcon,
+    name: '5 Hours',
+    icon: PlayCircleIcon,
   },
   {
-    name: 'Database backups.',
-    description: 'Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.',
-    icon: ServerIcon,
+    name: '200 Lessons',
+    icon: RectangleStackIcon,
+  },
+  {
+    name: 'Inteview questions and answers',
+    description: '',
+    icon: ChatBubbleBottomCenterTextIcon,
+  },
+  {
+    name: 'Precise and to the point byte sized videos',
+    description: '',
+    icon: ClockIcon,
   },
 ]
 </script>
