@@ -4,7 +4,7 @@
       <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
         <div class="lg:pr-8 lg:pt-4">
           <div class="lg:max-w-lg">
-            <h2 class="text-base/7 font-semibold text-indigo-400">Video Series</h2>
+            <!-- <h2 class="text-base/7 font-semibold text-indigo-400">Video Series</h2> -->
             <p class="mt-2 text-pretty text-4xl font-semibold tracking-tight text-white sm:text-5xl">
               {{ title }}
             </p>

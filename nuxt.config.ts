@@ -10,5 +10,15 @@ export default defineNuxtConfig({
     exposeConfig: false,
     injectPosition: 0,
     viewer: true,
+  },
+  app: {
+    head: {
+      script: [
+        {
+          src: 'https://embed.cloudflarestream.com/embed/sdk.latest.js',
+          defer: true
+        }
+      ]
+    }
   }
 })
