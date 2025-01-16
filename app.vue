@@ -1,11 +1,11 @@
 <template>
   <!-- HEADER -->
-<!-- <Header /> -->
+<Header />
 
   <!-- PAGE -->
   <RouterView />
 
-  <!-- <Footer /> -->
+  <Footer />
 </template>
 
 <script setup lang="ts">

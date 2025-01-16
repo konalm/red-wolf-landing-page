@@ -9,7 +9,7 @@
               {{ title }}
             </p>
 
-            <p class="mt-6 text-lg/8 text-gray-300"> {{  description }}</p>
+            <p class="mt-6 text-lg/8 text-gray-300">{{ description }}</p>
 
             <dl class="mt-10 max-w-xl space-y-8 text-base/7 text-gray-300 lg:max-w-none">
               <div v-for="feature in features" :key="feature.name" class="relative pl-9">
@@ -36,16 +36,13 @@
     </div>
   </div>
 
-  <!-- <TableOfContents /> -->
+  <!-- BUTTONS -->
+  <CourseCTA @preview-click="scrollToPreview" />
 
-  <!-- <TableOfContentsV2 /> -->
-
-  <!-- <TableOfContentsV3 /> -->
-
-  <CourseCTA />
-
+  <!-- What you will learn -->
   <CourseCTAV2 />
 
+  <CoursePreview ref="previewSection" />
 
   <TOCV5 />
 </template>
@@ -61,8 +58,11 @@ import TableOfContentsV3 from '../src/components/TableOfContentsV3.vue'
 import TOCV5 from '../src/components/TOCV5.vue'
 import CourseCTA from '../src/components/CourseCTA.vue'
 import CourseCTAV2 from '../src/components/CourseCTAV2.vue'
+import CoursePreview from '../src/components/CoursePreview.vue'
 
 const title = 'JavaScript Fundamentals'
+
+const previewSection = ref(null)
 
 const description = 'Learn the entire fundamentals of JavaScript so you can start coding apps with all the best practises'
 
@@ -94,4 +94,13 @@ const features = [
     icon: PencilSquareIcon,
   }
 ]
+
+const scrollToPreview = () => {
+  console.log('scroll to preview');
+
+  previewSection.value.$el.scrollIntoView({ behavior: 'smooth' })
+  previewSection.value.playVideo()
+
+  // You'll need to implement the video play logic in the CoursePreview component
+}
 </script>

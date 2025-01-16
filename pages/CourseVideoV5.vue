@@ -36,7 +36,16 @@
                       <ul role="list" class="-mx-2 divide-y divide-gray-800">
                         <li v-for="item in navigation" :key="item.name">
                           <a :href="item.href" :class="[item.current ? 'bg-black text-white' : 'text-gray-400 hover:bg-black hover:text-white', 'group flex gap-x-3 py-3 px-6 text-sm/6 font-semibold']">
-                            <component :is="item.icon" :class="[item.current ? 'text-white' : 'text-gray-200 group-hover:text-white', 'size-6 shrink-0']" aria-hidden="true" />
+                            <!-- Empty Cicle Icon-->
+                            <div 
+                              v-if="!item.completed"
+                              class="flex size-6 shrink-0 items-center justify-center rounded-full border border-gray-400"
+                            ></div>
+                            <component v-if="item.completed"
+                              :is="CheckCircleIcon" 
+                              class="text-green-500 size-7 shrink-0" 
+                              aria-hidden="true" 
+                            />
                             {{ item.name }}
                           </a>
                         </li>
@@ -71,7 +80,15 @@
               <!-- <ul role="list" class="space-y-1"> -->
                 <li v-for="item in navigation" :key="item.name">
                   <a :href="item.href" :class="[item.current ? 'bg-black text-white' : 'text-gray-400 hover:bg-black hover:text-white', 'group flex gap-x-3 py-3 px-6 text-sm/6 font-semibold']">
-                    <component :is="item.icon" :class="[item.current ? 'text-white' : 'text-gray-200 group-hover:text-white', 'size-6 shrink-0']" aria-hidden="true" />
+                    <!-- Empty Cicle Icon-->
+                    <div v-if="!item.completed"
+                      class="flex size-7 shrink-0 items-center justify-center rounded-full border border-gray-400"
+                    ></div>
+                    <component v-if="item.completed"
+                      :is="CheckCircleIcon" 
+                      class="text-green-500 size-7 shrink-0" 
+                      aria-hidden="true" 
+                    />
                     {{ item.name }}
                   </a>
                 </li>
@@ -86,7 +103,7 @@
       <div class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-700 bg-gray-800 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
         <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = true">
           <span class="sr-only">Open sidebar</span>
-          <Bars3Icon class="size-6" aria-hidden="true" />
+          <Bars3Icon class="size-6 text-gray-500" aria-hidden="true" />
         </button>
 
         <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
@@ -102,7 +119,8 @@
             <div class="mt-0 flex items-center gap-x-6">
               <a href="#" class="text-sm/6 font-bold text-white">
                 <span aria-hidden="true">←</span>
-                Previous Lesson 
+                <span class="hidden lg:inline">Previous Lesson</span>
+                <span class="lg:hidden">Previous</span>
               </a>
             </div>
 
@@ -113,7 +131,8 @@
             <button type="button" 
               class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Complete and go to next lesson <span aria-hidden="true">→</span>
+              <span class="hidden lg:inline">Complete and go to next lesson <span aria-hidden="true">→</span></span>
+              <span class="lg:hidden">Complete & Continue <span aria-hidden="true">→</span></span>
             </button>
           </div>
         </div>
@@ -123,10 +142,12 @@
         <div class="px-0 sm:px-0 lg:px-0 video-container"> <!-- WANT THIS TO FILL THE REMAING SCREEN-->
           <div class="relative  h-full">
             <iframe
+              ref="videoPlayer"
               src="https://customer-cigaee6xmg0zgxhq.cloudflarestream.com/e1905766c033f9f40fc910a8756f08f0/iframe"
               class="absolute top-0 left-0 w-full h-full"
               allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
               allowfullscreen="true"
+              @load="setupVideoEventListeners"
             ></iframe>
           </div>
         </div>
@@ -140,26 +161,11 @@ import { ref } from 'vue'
 import {
   Dialog,
   DialogPanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
   TransitionChild,
   TransitionRoot,
 } from '@headlessui/vue'
-import {
-  Bars3Icon,
-  BellIcon,
-  CalendarIcon,
-  ChartPieIcon,
-  Cog6ToothIcon,
-  DocumentDuplicateIcon,
-  FolderIcon,
-  HomeIcon,
-  UsersIcon,
-  XMarkIcon,
-} from '@heroicons/vue/24/outline'
-import { ChevronDownIcon, MagnifyingGlassIcon, CheckIcon, CheckCircleIcon, PlayCircleIcon } from '@heroicons/vue/20/solid'
+import { Bars3Icon, HomeIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { CheckCircleIcon } from '@heroicons/vue/20/solid'
 
 const videoId = 'e1905766c033f9f40fc910a8756f08f0'
 
@@ -173,24 +179,35 @@ const chapters = [
 ]
 
 const navigation = [
-  { name: 'Lesson #1 (00:00)', href: '#', icon: CheckCircleIcon, current: true },
-  { name: 'Lesson #2 (11:11)', href: '#', icon: UsersIcon, current: false },
-  { name: 'Lesson #3 (22:22)', href: '#', icon: PlayCircleIcon, current: false },
-  { name: 'Lesson #4 (33:33)', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Lesson #5 (44:44)', href: '#', icon: CheckCircleIcon, current: false },
-  { name: 'Lesson #6 (55:55)', href: '#', icon: CheckCircleIcon, current: false },
-]
-const teams = [
-  { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
-  { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
-  { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-]
-const userNavigation = [
-  { name: 'Your profile', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Lesson #1 (00:00)', href: '#', current: true, completed: true },
+  { name: 'Lesson #2 (11:11)', href: '#', current: false, completed: false },
+  { name: 'Lesson #3 (22:22)', href: '#', current: false, completed: true },
+  { name: 'Lesson #4 (33:33)', href: '#', current: false, completed: false },
+  { name: 'Lesson #5 (44:44)', href: '#', current: false, completed: true },
+  { name: 'Lesson #6 (55:55)', href: '#', current: false, completed: false },
 ]
 
 const sidebarOpen = ref(false)
+
+const videoPlayer = ref(null)
+
+const setupVideoEventListeners = () => {
+  const player = videoPlayer.value
+
+  if (!player) return;
+
+  window.addEventListener('message', (event) => {
+    console.log('Event received', event)
+
+    if (event.data.eventName === 'ended') {
+      console.log('USER COMPLETED VIDEO');
+    }
+  })
+}
+
+const handleVideoComplete = () => {
+  console.log('Video complete')
+}
 </script>
 
 <style>
