@@ -53,6 +53,6 @@
 </template>
 
 <script setup lang="ts">
-import SignUpCTA from './src/components/SignUpCTA.vue'
+import SignUpCTA from '../src/components/SignUpCTA.vue'
 
 </script>

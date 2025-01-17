@@ -64,7 +64,8 @@
   const navigation = [
   { name: 'Home', href: 'home' },
   { name: 'Pricing', href: 'pricing' },
-  { name: 'Courses', href: 'courses' },
+  { name: 'Course Materials', href: 'courses' },
+  { name: 'Become a Member', href: 'signup' },
   // { name: 'Contact', href: '#'},
   // { name: 'Our Mission', href: '#' }
 ]

@@ -31,12 +31,6 @@
 
 <script setup>
 import {
-  ArrowPathIcon,
-  CloudArrowUpIcon,
-  Cog6ToothIcon,
-  FingerPrintIcon,
-  LockClosedIcon,
-  ServerIcon,
   ClockIcon,
   StarIcon,
   CodeBracketIcon,
