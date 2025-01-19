@@ -49,8 +49,8 @@
 
 <script setup>
 import {
-   CloudArrowUpIcon, LockClosedIcon, ServerIcon, ChartBarIcon, PlayCircleIcon, QuestionMarkCircleIcon,
-   ClockIcon, ChatBubbleBottomCenterTextIcon, RectangleStackIcon, PencilSquareIcon
+   ChartBarIcon, PlayCircleIcon, ClockIcon, ChatBubbleBottomCenterTextIcon, RectangleStackIcon,
+   PencilSquareIcon,
 } from '@heroicons/vue/20/solid'
 import TableOfContents from '../src/components/TableOfContents.vue'
 import TableOfContentsV2 from '../src/components/TableOfContentsV2.vue'
@@ -69,11 +69,11 @@ const description = 'Learn the entire fundamentals of JavaScript so you can star
 const features = [
   {
     name: 'Beginner',
-    icon: ChartBarIcon,
+    icon: markRaw(resolveComponent('ChartBarIcon')),
   },
   {
     name: '5 Hours',
-    icon: PlayCircleIcon,
+    icon: markRaw(resolveComponent('PlayCircleIcon')),
   },
   {
     name: '200 Lessons',

@@ -10,12 +10,24 @@
       </div>
 
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" action="#" method="POST">
+        <form class="space-y-6" @submit.prevent="submitSignUp()">
           <div>
             <label for="email" class="block text-sm/6 font-medium text-white">Username</label>
             <div class="mt-2">
-              <input type="email" name="email" id="email" autocomplete="email" required="true"
-                class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+              <input type="text" name="username" id="username" v-model="username" required="true"
+                class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+              />
+            </div>
+
+            <div class="rounded-md bg-red-50 p-4 mt-2 py-2"  v-for="error in errorFeedback?.username" :key="error">
+              <div class="flex">
+                <div class="shrink-0">
+                  <XCircleIcon class="size-5 text-red-400" aria-hidden="true" />
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">{{ error }}</h3>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -25,6 +37,17 @@
             <div class="mt-2">
               <input type="email" name="email" id="email" autocomplete="email" required="true"
                 class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+            </div>
+
+            <div class="rounded-md bg-red-50 p-4 mt-2 py-2"  v-for="error in errorFeedback?.email" :key="error">
+              <div class="flex">
+                <div class="shrink-0">
+                  <XCircleIcon class="size-5 text-red-400" aria-hidden="true" />
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">{{ error }}</h3>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -37,6 +60,17 @@
               <input type="password" name="password" id="password" autocomplete="current-password" required=true
                 class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
             </div>
+
+            <div class="rounded-md bg-red-50 p-4 mt-2 py-2"  v-for="error in errorFeedback?.password" :key="error">
+              <div class="flex">
+                <div class="shrink-0">
+                  <XCircleIcon class="size-5 text-red-400" aria-hidden="true" />
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-red-800">{{ error }}</h3>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Confirm Password -->
@@ -47,6 +81,17 @@
             <div class="mt-2">
               <input type="password" name="password" id="password" autocomplete="current-password" required=true
                 class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+            </div>
+
+            <div class="rounded-md bg-red-50 p-4 mt-2 py-2"  v-for="error in errorFeedback?.confirmPassword" :key="error">
+              <div class="flex">
+                <div class="shrink-0">
+                  <XCircleIcon class="size-5 text-red-400" aria-hidden="true" />
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">{{ error }}</h3>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -62,22 +107,19 @@
               </div>
             </div>
           </div>
+
           <div>
-
-          <button 
-            type="submit"
-            class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-3 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-          >
-            Sign Up and Continue to Payment
-          </button>
-  </div>
-
-
-
-</form>
-</div>
-</div>
-</main>
+            <button 
+              type="submit"
+              class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-3 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+            >
+              Sign Up and Continue to Payment
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
 </div>
 
 <!-- <SignUpCTA /> -->
@@ -86,5 +128,59 @@
 <script setup lang="ts">
 import SignUpCTA from '../src/components/SignUpCTA.vue'
 import { InformationCircleIcon } from '@heroicons/vue/20/solid'
+import * as userHttp from '~/src/http/user.http'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const username = ref('')
+const email = ref('')
+const password = ref('')
+const passwordConfirm = ref('')
+
+const errorFeedback = ref<{
+  username: string[]
+  email: string[]
+  password: string[]
+  confirmPassword: string[]
+}>({
+  username: [],
+  email: [],
+  password: [],
+  confirmPassword: []
+})
+
+async function submitSignUp() {
+  console.log('submitSignUp ()');
+
+  errorFeedback.value = {
+    username: [],
+    email: [],
+    password: [],
+    confirmPassword: []
+  }
+
+  if (password.value !== passwordConfirm.value) {
+    errorFeedback.value.confirmPassword = ['Password does not match']
+    return
+  }
+
+  const signupResponse = await userHttp
+    .signUp({
+      username: username.value,
+      email: email.value,
+      password: password.value
+    })
+    .catch((error) => {
+      if (error.response.status === 400) {
+        errorFeedback.value = error.response.data.errors
+      }
+    })
+
+  if (signupResponse?.token) {
+    localStorage.setItem('auth_token', signupResponse.token)
+    router.push('/courses')
+  }
+}
 
 </script>

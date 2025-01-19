@@ -6,11 +6,16 @@
         <iframe
           id="stream-player"
           ref="videoPlayer"
-          src="https://customer-cigaee6xmg0zgxhq.cloudflarestream.com/e1905766c033f9f40fc910a8756f08f0/iframe"
+          :src="`https://customer-cigaee6xmg0zgxhq.cloudflarestream.com/${props.videoId}/iframe`"
           class="w-full aspect-video"
           allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
           allowfullscreen="true"
         ></iframe>
+
+        <!-- 
+                          :src="`https://customer-cigaee6xmg0zgxhq.cloudflarestream.com/${props.videoId}/iframe`"
+                  :src="`https://customer-cigaee6xmg0zgxhq.cloudflarestream.com/${props.videoId}/iframe`"
+        -->
       </div>
     </div>
   </div>
@@ -19,6 +24,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
+const props = defineProps({
+  videoId: {
+    type: String,
+    required: true
+  }
+})
 
 const videoPlayer = ref(null)
 
@@ -34,21 +45,14 @@ onMounted(() => {
   console.log('document.getElementById', document.getElementById('stream-player'))
 })
 
-const playVideo2 = () => {
-  if (iframeRef.value) {
-    iframeRef.value.contentWindow?.postMessage(
-      JSON.stringify({ event: 'play' }), // Send a play event to the iframe
-      '*'
-    );
-  }
-};
-
 const playVideo = () => {
-  console.log('PLAY VIDEO !!!');
+  console.log('PLAY VIDEO FUNCTION CALLED !!!');
 
   console.log('VIDEO GET DOM ELEMENT ',document.getElementById('stream-player'))
 
-  videoPlayer.value.play()
+  console.log('VIDEO PLAYER VALUE', videoPlayer.value)
+
+  // videoPlayer.value.play()
 }
 
 defineExpose({

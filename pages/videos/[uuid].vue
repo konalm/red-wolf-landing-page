@@ -27,26 +27,31 @@
                 <nav class="flex flex-1 flex-col">
                   <ul role="list" class="flex flex-1 flex-col gap-y-7">
                     <!-- Chapter-->
-                    <li v-for="chapter in chapters" :key="chapter.name">
+                    <li v-for="navItem in navigation" :key="navItem.chapter">
                       <p class="bg-gray-700 text-white group flex gap-x-3 p-3 text-sm/6 font-semibold px-6 py-3">
-                        {{  chapter.name }} ({{ chapter.duration }})
+                        {{  navItem.chapter }} ({{ navItem.duration }})
                       </p>
 
                       <!-- Lessons -->
                       <ul role="list" class="-mx-2 divide-y divide-gray-800">
-                        <li v-for="item in navigation" :key="item.name">
-                          <a :href="item.href" :class="[item.current ? 'bg-black text-white' : 'text-gray-400 hover:bg-black hover:text-white', 'group flex gap-x-3 py-3 px-6 text-sm/6 font-semibold']">
+                        <li v-for="video in navItem.videos" :key="video.UUID">
+                          <a :href="`/videos/${video.UUID}`" 
+                            :class="[isCurrentVideo(video.UUID) 
+                              ? 'bg-black text-white' 
+                              : 'text-gray-400 hover:bg-black hover:text-white'
+                              , 'group flex gap-x-3 py-3 px-6 text-sm/6 font-semibold']"
+                            >
                             <!-- Empty Cicle Icon-->
                             <div 
-                              v-if="!item.completed"
+                              v-if="!isCurrentVideo(video.UUID)"
                               class="flex size-6 shrink-0 items-center justify-center rounded-full border border-gray-400"
                             ></div>
-                            <component v-if="item.completed"
+                            <component v-if="isCurrentVideo(video.UUID)"
                               :is="CheckCircleIcon" 
                               class="text-green-500 size-7 shrink-0" 
                               aria-hidden="true" 
                             />
-                            {{ item.name }}
+                            {{ video.name }}
                           </a>
                         </li>
                       </ul>
@@ -70,26 +75,31 @@
         <nav class="flex flex-1 flex-col">
           <ul role="list" class="flex flex-1 flex-col gap-y-3">
             <!-- Chapter-->
-            <li v-for="chapter in chapters" :key="chapter.name">
+            <li v-for="navItem in navigation" :key="navItem.chapter">
               <p class="bg-gray-700 text-white group flex gap-x-3 p-3 text-sm/6 font-semibold px-6 py-3">
-                {{  chapter.name }} ({{ chapter.duration }})
+                {{  navItem.chapter }} ({{ navItem.duration }})
               </p>
 
               <!-- Lessons -->
               <ul role="list" class="-mx-2  divide-y divide-gray-800">
               <!-- <ul role="list" class="space-y-1"> -->
-                <li v-for="item in navigation" :key="item.name">
-                  <a :href="item.href" :class="[item.current ? 'bg-black text-white' : 'text-gray-400 hover:bg-black hover:text-white', 'group flex gap-x-3 py-3 px-6 text-sm/6 font-semibold']">
+                <li v-for="video in navItem.videos" :key="video.UUID">
+                  <a :href="`/videos/${video.UUID}`" 
+                    :class="[isCurrentVideo(video.UUID)
+                      ? 'bg-black text-white' 
+                      : 'text-gray-400 hover:bg-black hover:text-white', 
+                      'group flex gap-x-3 py-3 px-6 text-sm/6 font-semibold']"
+                  >
                     <!-- Empty Cicle Icon-->
-                    <div v-if="!item.completed"
+                    <div v-if="!isCurrentVideo(video.UUID)"
                       class="flex size-7 shrink-0 items-center justify-center rounded-full border border-gray-400"
                     ></div>
-                    <component v-if="item.completed"
+                    <component v-if="isCurrentVideo(video.UUID)"
                       :is="CheckCircleIcon" 
                       class="text-green-500 size-7 shrink-0" 
                       aria-hidden="true" 
                     />
-                    {{ item.name }}
+                    {{ video.name }} ({{ video.duration }})
                   </a>
                 </li>
               </ul>
@@ -156,7 +166,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import {
   Dialog,
@@ -166,37 +176,28 @@ import {
 } from '@headlessui/vue'
 import { Bars3Icon, HomeIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { CheckCircleIcon } from '@heroicons/vue/20/solid'
+import { getVideo } from '~/src/http/video.http'
+import type { VideoWithChapter, VideoNavigationChapter } from '~/src/types/video.types'
 
-const videoId = 'e1905766c033f9f40fc910a8756f08f0'
-
-const props = defineProps({
-  videoId: {
-    type: String,
-    required: true
-  }
-})
-
-const chapters = [
-  { name: 'Chapter #1', duration: '10:00' },
-  { name: 'Chapter #2', duration: '10:00' },
-  { name: 'Chapter #3', duration: '10:00' },
-  { name: 'Chapter #4', duration: '10:00' },
-  { name: 'Chapter #5', duration: '10:00' },
-  { name: 'Chapter #6', duration: '10:00' },
-]
-
-const navigation = [
-  { name: 'Lesson #1 (00:00)', href: '#', current: true, completed: true },
-  { name: 'Lesson #2 (11:11)', href: '#', current: false, completed: false },
-  { name: 'Lesson #3 (22:22)', href: '#', current: false, completed: true },
-  { name: 'Lesson #4 (33:33)', href: '#', current: false, completed: false },
-  { name: 'Lesson #5 (44:44)', href: '#', current: false, completed: true },
-  { name: 'Lesson #6 (55:55)', href: '#', current: false, completed: false },
-]
+const video = ref<VideoWithChapter | null>(null)
+const navigation = ref<Array<VideoNavigationChapter>>([])
 
 const sidebarOpen = ref(false)
 
 const videoPlayer = ref(null)
+
+onMounted(async () => {
+  uploadContent()
+})
+
+async function uploadContent() {
+  const { uuid } = useRoute().params;
+
+  const { video: videoData, navigation: navigationData } = await getVideo(uuid as string)
+
+  video.value = videoData
+  navigation.value = navigationData
+}
 
 const setupVideoEventListeners = () => {
   const player = videoPlayer.value
@@ -212,9 +213,15 @@ const setupVideoEventListeners = () => {
   })
 }
 
+function isCurrentVideo(UUID: string) {
+  return video.value?.UUID === UUID;
+}
+
 const handleVideoComplete = () => {
   console.log('Video complete')
 }
+
+
 </script>
 
 <style>
