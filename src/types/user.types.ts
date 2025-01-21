@@ -2,6 +2,7 @@ export interface SignUpFields {
   username: string
   email: string
   password: string
+  annualBilling: boolean
 }
 
 export interface SignUpResponse {
@@ -12,6 +13,7 @@ export interface SignUpResponse {
     email: string
   }
   token: string
+  paymentLink: string
 }
 
 export interface LoginFields {

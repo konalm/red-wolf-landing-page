@@ -69,11 +69,11 @@ const description = 'Learn the entire fundamentals of JavaScript so you can star
 const features = [
   {
     name: 'Beginner',
-    icon: markRaw(resolveComponent('ChartBarIcon')),
+    icon: ChartBarIcon,
   },
   {
     name: '5 Hours',
-    icon: markRaw(resolveComponent('PlayCircleIcon')),
+    icon: PlayCircleIcon,
   },
   {
     name: '200 Lessons',
@@ -81,12 +81,10 @@ const features = [
   },
   {
     name: 'Inteview questions and answers',
-    description: '',
     icon: ChatBubbleBottomCenterTextIcon,
   },
   {
     name: 'Precise and to the point byte sized videos',
-    description: '',
     icon: ClockIcon,
   },
   {
