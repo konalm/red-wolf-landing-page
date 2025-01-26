@@ -20,5 +20,8 @@ export default defineNuxtConfig({
         }
       ]
     }
+  },
+  vite: {
+    envDir: '~/'
   }
 })

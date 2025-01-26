@@ -1,8 +1,10 @@
 import type { VideoCourse } from '../types/videoCourse.types';
+import { API_URL  } from '../constants/general.constants';
 
-const URL = 'http://127.0.0.1:3001';
+console.log('API URL ', API_URL);
+
 
 export async function getVideoCourse(uuid: string): Promise<VideoCourse> {
-  return useFetch<VideoCourse>(`${URL}/video-courses/${uuid}/content`)
+  return useFetch<VideoCourse>(`${API_URL}/video-courses/${uuid}/content`)
     .then((response) => response.data.value as VideoCourse)
 }
