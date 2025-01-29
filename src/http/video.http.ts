@@ -2,7 +2,11 @@ import type { GetVideoResponse, Video } from '../types/video.types';
 import { API_URL } from '../constants/general.constants';
 
 export async function getVideo(uuid: string): Promise<GetVideoResponse> {
-  return useFetch<GetVideoResponse>(`${API_URL}/videos/${uuid}`)
+  const headers = {
+    Authorization: `Bearer ${localStorage.getItem('auth_token')}`
+  }
+
+  return useFetch<GetVideoResponse>(`${API_URL}/videos/${uuid}`, { headers })
     .then((response) => response.data.value as GetVideoResponse)
 }
 

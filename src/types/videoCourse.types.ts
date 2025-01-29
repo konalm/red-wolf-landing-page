@@ -30,3 +30,12 @@ export interface VideoCourse {
   learningOutcomes: string[];
   lessons: LessonItem[];
 }
+
+export interface UserCompletedVideoResponse {
+  userCompletedVideo: {
+    id: string;
+    userId: string;
+    videoId: string;
+  }
+  nextVideoId?: string;
+}

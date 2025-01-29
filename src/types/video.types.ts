@@ -6,6 +6,7 @@ export interface Video {
   cloudFlareId: string;
   chapterUUID: string;
   order: number;
+  completed?: boolean;
 }
 
 export interface VideoWithChapter extends Video {

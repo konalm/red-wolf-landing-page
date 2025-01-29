@@ -42,11 +42,10 @@
                               , 'group flex gap-x-3 py-3 px-6 text-sm/6 font-semibold']"
                             >
                             <!-- Empty Cicle Icon-->
-                            <div 
-                              v-if="!isCurrentVideo(video.UUID)"
+                            <div v-if="!video.completed"
                               class="flex size-6 shrink-0 items-center justify-center rounded-full border border-gray-400"
                             ></div>
-                            <component v-if="isCurrentVideo(video.UUID)"
+                            <component v-if="video.completed"
                               :is="CheckCircleIcon" 
                               class="text-green-500 size-7 shrink-0" 
                               aria-hidden="true" 
@@ -90,11 +89,22 @@
                       : 'text-gray-400 hover:bg-black hover:text-white', 
                       'group flex gap-x-3 py-3 px-6 text-sm/6 font-semibold']"
                   >
+
+                     <!-- Play Icon / Current Video -->
+                    <component v-if="isCurrentVideo(video.UUID)"
+                      :is="PlayCircleIcon" 
+                      class="text-indigo-400 size-7 shrink-0" 
+                      aria-hidden="true" 
+                    />
+
+
                     <!-- Empty Cicle Icon-->
-                    <div v-if="!isCurrentVideo(video.UUID)"
+                    <div v-if="!isCurrentVideo(video.UUID) && !video.completed"
                       class="flex size-7 shrink-0 items-center justify-center rounded-full border border-gray-400"
                     ></div>
-                    <component v-if="isCurrentVideo(video.UUID)"
+
+                    <!-- Check Circle Icon -->
+                    <component v-if="!isCurrentVideo(video.UUID) && video.completed"
                       :is="CheckCircleIcon" 
                       class="text-green-500 size-7 shrink-0" 
                       aria-hidden="true" 
@@ -153,7 +163,7 @@
           <div class="relative  h-full">
             <iframe
               ref="videoPlayer"
-              src="https://customer-cigaee6xmg0zgxhq.cloudflarestream.com/e1905766c033f9f40fc910a8756f08f0/iframe"
+              :src="videoSrc"
               class="absolute top-0 left-0 w-full h-full"
               allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
               allowfullscreen="true"
@@ -175,9 +185,13 @@ import {
   TransitionRoot,
 } from '@headlessui/vue'
 import { Bars3Icon, HomeIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { CheckCircleIcon } from '@heroicons/vue/20/solid'
+import { CheckCircleIcon, PlayCircleIcon, PlayIcon } from '@heroicons/vue/20/solid'
 import { getVideo } from '~/src/http/video.http'
 import type { VideoWithChapter, VideoNavigationChapter } from '~/src/types/video.types'
+import * as courseHttp from '~/src/http/course.http'
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const video = ref<VideoWithChapter | null>(null)
 const navigation = ref<Array<VideoNavigationChapter>>([])
@@ -187,13 +201,23 @@ const sidebarOpen = ref(false)
 const videoPlayer = ref(null)
 
 onMounted(async () => {
+  console.log('ON MOUNTED');
   uploadContent()
 })
 
+const videoSrc = computed(() => {
+  return `https://customer-cigaee6xmg0zgxhq.cloudflarestream.com/${video.value?.cloudFlareId}/iframe`
+})
+
 async function uploadContent() {
+  console.log('UPLOAD CONTENT');
+
   const { uuid } = useRoute().params;
 
   const { video: videoData, navigation: navigationData } = await getVideo(uuid as string)
+
+  console.log('VIDEO DATA', videoData);
+  console.log('NAVIGATION DATA', navigationData);
 
   video.value = videoData
   navigation.value = navigationData
@@ -205,10 +229,9 @@ const setupVideoEventListeners = () => {
   if (!player) return;
 
   window.addEventListener('message', (event) => {
-    console.log('Event received', event)
-
     if (event.data.eventName === 'ended') {
       console.log('USER COMPLETED VIDEO');
+      userCompletedVideo()
     }
   })
 }
@@ -217,10 +240,34 @@ function isCurrentVideo(UUID: string) {
   return video.value?.UUID === UUID;
 }
 
-const handleVideoComplete = () => {
-  console.log('Video complete')
+async function userCompletedVideo() {
+  console.log('USER COMPLETED VIDEO');
+
+  const { uuid } = useRoute().params;
+
+  console.log('CURRENT VIDEO ID', uuid);
+
+  const userCompletedVideoResponse = await courseHttp.userCompletedVideo(uuid as string)
+
+  const nextVideoId = userCompletedVideoResponse?.nextVideoId
+
+  console.log('NEXT VIDEO ID', nextVideoId);
+
+  if (nextVideoId) {
+    console.log('NAVIGATING TO NEXT VIDEO');
+    router.push(`/videos/${nextVideoId}`)
+    // navigateTo(`/videos/${nextVideoId}`)
+  }
 }
 
+watch(
+  () => useRoute().params.uuid,
+  async (newUuid) => {
+    if (newUuid) {
+      await uploadContent()
+    }
+  }
+)
 
 </script>
 
