@@ -1,4 +1,3 @@
-
 interface KeyFeatureItem {
   name: string;
   icon: string;
@@ -38,4 +37,16 @@ export interface UserCompletedVideoResponse {
     videoId: string;
   }
   nextVideoId?: string;
+}
+
+export interface MemberVideoCourse {
+  UUID: string;
+  name: string;
+  imagePath: string;
+  belt: string;
+  progress: {
+    totalVideos: number;
+    watchedVideos: number;
+    percentageComplete: number;
+  }
 }

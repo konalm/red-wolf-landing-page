@@ -70,8 +70,7 @@
 
 <script setup>
 import { defineComponent, h, ref } from 'vue'
-import { Dialog, DialogPanel, RadioGroup, RadioGroupOption } from '@headlessui/vue'
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { RadioGroup, RadioGroupOption } from '@headlessui/vue'
 import { CheckIcon } from '@heroicons/vue/20/solid'
 
 import SignUpCTA from './src/components/SignUpCTA.vue'
@@ -93,10 +92,10 @@ const pricing = {
   ],
   tiers: [
     {
-      name: 'Full Membership',
+      name: 'Full Membership for the price of a coffee',
       id: 'tier-full-membership',
       href: '#',
-      price: { monthly: '£5.00', annually: '£40.00' },
+      price: { monthly: '£4.00', annually: '£30.00' },
       description: 'Early Access Price',
       features: [
         '10 hours of video content', 

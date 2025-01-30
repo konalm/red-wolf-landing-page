@@ -60,13 +60,18 @@ import {
 import LessonOutcomes from '~/src/components/videoCourse/LessonOutcomes.vue'
 import TableOfContent from '~/src/components/videoCourse/TableOfContent.vue'
 import { getCourseVideoForUser } from '~/src/http/video.http';
+import { useRoute } from 'vue-router'
+
 const course = ref<VideoCourse | undefined>(undefined);
 const previewSection = ref<InstanceType<typeof CoursePreview> | null>(null);
 
-const { uuid } = useRoute().params;
-
+const route = useRoute()
 
 onMounted(() => {
+  console.log('COMPONENT MOUNTED');
+
+  console.log('ROUTER QUERY ', route.params);
+
   uploadVideoCourse();
 })
 
@@ -90,7 +95,9 @@ function getIcon(name: string) {
 }
 
 async function uploadVideoCourse() {
-  const { uuid } = useRoute().params;
+  const uuid = route.params.uuid
+
+  console.log('UUID ', uuid);
 
  course.value = await getVideoCourse(uuid as string);
 
@@ -109,6 +116,8 @@ const scrollToPreview = () => {
 const goToCourseVideos = async () => {
   console.log('go to course videos');
 
+  const uuid = route.params.uuid
+
   const video = await getCourseVideoForUser(uuid as string);
 
   console.log('video ', video);
@@ -116,4 +125,15 @@ const goToCourseVideos = async () => {
 
   navigateTo(`/videos/${video.UUID}`);
 }
+
+// watch(
+//   () => route.params.uuid,
+//   async (newUuid) => {
+//     console.log('new UUID ', newUuid);
+//     if (newUuid) {
+//       await uploadVideoCourse()
+//     }
+//   },
+//   { immediate: true } // This will run on component creation too
+// )
 </script>

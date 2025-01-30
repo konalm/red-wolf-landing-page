@@ -1,4 +1,4 @@
-import type { VideoCourse } from '../types/videoCourse.types';
+import type { VideoCourse, MemberVideoCourse } from '../types/videoCourse.types';
 import { API_URL  } from '../constants/general.constants';
 import axios from 'axios';
 import type { UserCompletedVideoResponse } from '../types/videoCourse.types';
@@ -17,4 +17,9 @@ export async function userCompletedVideo(videoId: string): Promise<UserCompleted
 
   return axios.post(`${API_URL}/user-completed-video`, { videoId }, { headers })
     .then((response) => response.data)
+}
+
+export async function getMemberCourses(): Promise<MemberVideoCourse[]> {
+  return axios.get(`${API_URL}/video-courses`)
+    .then((response) => response.data as MemberVideoCourse[])
 }
