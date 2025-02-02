@@ -189,9 +189,9 @@ import { CheckCircleIcon, PlayCircleIcon, PlayIcon } from '@heroicons/vue/20/sol
 import { getVideo } from '~/src/http/video.http'
 import type { VideoWithChapter, VideoNavigationChapter } from '~/src/types/video.types'
 import * as courseHttp from '~/src/http/course.http'
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
-const router = useRouter()
+const router = useRoute()
 
 const video = ref<VideoWithChapter | null>(null)
 const navigation = ref<Array<VideoNavigationChapter>>([])
@@ -212,7 +212,9 @@ const videoSrc = computed(() => {
 async function uploadContent() {
   console.log('UPLOAD CONTENT');
 
-  const { uuid } = useRoute().params;
+  const { uuid } = router.params;
+
+  console.log('VIDEO UUID', uuid);
 
   const { video: videoData, navigation: navigationData } = await getVideo(uuid as string)
 
@@ -255,8 +257,7 @@ async function userCompletedVideo() {
 
   if (nextVideoId) {
     console.log('NAVIGATING TO NEXT VIDEO');
-    router.push(`/videos/${nextVideoId}`)
-    // navigateTo(`/videos/${nextVideoId}`)
+    navigateTo(`/videos/${nextVideoId}`)
   }
 }
 

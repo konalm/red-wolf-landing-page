@@ -8,7 +8,8 @@
               @click="$emit('gotToCourseVideos')"
             >
               <PlayIcon class="-mr-0.5 size-5 mr-2" aria-hidden="true"/>
-              {{ buttonText }}
+              <span v-if="!props.userStartedCourse">{{ buttonText }}</span>
+              <span v-else>Continue Course</span>
             </button>
 
           <a href="#" class="text-sm/6 font-semibold text-white" @click="$emit('preview-click')">
@@ -39,6 +40,11 @@
 <script setup lang="ts">
 import { CheckCircleIcon, PlayIcon, PlayCircleIcon } from '@heroicons/vue/20/solid'
 import { ref } from 'vue'
+
+const props = defineProps<{
+  userStartedCourse?: boolean;
+}>()
+
 
 const showPreview = ref(false)
 

@@ -7,6 +7,7 @@ interface VideoItem {
   title: string;
   id: string;
   duration: string;
+  completed?: boolean;
 }
 
 export interface LessonItem {
@@ -28,6 +29,7 @@ export interface VideoCourse {
   keyFeatures: KeyFeatureItem[];
   learningOutcomes: string[];
   lessons: LessonItem[];
+  userStartedCourse?: boolean;
 }
 
 export interface UserCompletedVideoResponse {
@@ -45,6 +47,7 @@ export interface MemberVideoCourse {
   imagePath: string;
   belt: string;
   progress: {
+    started: boolean;
     totalVideos: number;
     watchedVideos: number;
     percentageComplete: number;

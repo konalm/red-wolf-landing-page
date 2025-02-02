@@ -7,7 +7,11 @@
           <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-700 p-6">
             <img :src="course.imagePath" class="size-12 flex-none rounded-lg bg-gray-700 object-cover ring-1 ring-gray-900/10" />
 
-            <div class="text-sm/6 font-medium text-gray-300">{{ course.name }}</div>
+            <div class="text-sm/6 font-medium text-gray-300">
+              <p v-on:click="navigateToCourse(course.UUID)" class="cursor-pointer hover:text-gray-100">
+                {{ course.name }}
+              </p>
+            </div>
   
             <Menu as="div" class="relative ml-auto">
               <MenuButton class="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-100">
@@ -76,11 +80,21 @@
             <div class="flex justify-center gap-x-4 py-3">
               <dd class="flex items-center gap-x-2 w-full">
                 <button 
+                  v-if="!course?.progress?.started"
                   type="button" 
                   @click="navigateToCourse(course.UUID)"
                   class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 w-full"
                 >
                   Enter Course
+                </button>
+
+                <button 
+                  v-if="course?.progress?.started"
+                  type="button" 
+                  @click="navigateToCourseVideos(course.UUID)"
+                  class="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 w-full"
+                >
+                   Continue <VideoCameraIcon class="size-5 -ml-1 mr-1 inline-block ml-2" aria-hidden="true" />
                 </button>
               </dd>
             </div>
@@ -97,8 +111,9 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { EllipsisHorizontalIcon } from '@heroicons/vue/20/solid'
 import * as courseHttp from '~/src/http/course.http'
 import type { MemberVideoCourse } from '~/src/types/videoCourse.types'
+import { VideoCameraIcon } from '@heroicons/vue/20/solid'
+import { getCourseVideoForUser } from '~/src/http/video.http';
 
-const router = useRouter()
 
 const courses = ref<Array<MemberVideoCourse>>([])
 
@@ -107,14 +122,17 @@ onMounted(() => {
 })
 
 async function navigateToCourse(uuid: string) {
-  console.log('Navigating to course with UUID:', uuid)
-  // await router.push(`/video-courses/${uuid}`)
   await navigateTo(`video-courses/${uuid}`)
-  console.log('Navigation complete')
 }
 
 async function uploadCourses() {
   courses.value = await courseHttp.getMemberCourses()
+}
+
+async function navigateToCourseVideos(courseUUID: string) {
+  const video = await getCourseVideoForUser(courseUUID);
+
+  navigateTo(`/videos/${video.UUID}`);
 }
 
 </script>

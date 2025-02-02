@@ -24,21 +24,13 @@
                   />
         
                   <div class="min-w-0 flex-auto">
-                    <p class="text-sm/6 font-semibold text-white">{{ lesson.chapter }}</p>
+                    <p class="text-sm/6 font-semibold text-white">{{ lesson.chapterName }}</p>
                     <p class="mt-1 truncate text-xs/5 text-gray-400">Chapter {{ index + 1 }}</p>
                   </div>
                 </div>
 
                 <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                  <!-- <p class="text-sm/6 text-white">{{ item.role }}</p> -->
-                  <p class="text-sm/6 text-white"> pp 12 Lessons ( 33m ) {{ lesson.videos.length }}</p>
-                  <!-- <p v-if="item.lastSeen" class="mt-1 text-xs/5 text-gray-400">
-                    <p class="text-xs/5 text-gray-400 text-yellow-400">In Progress</p>
-                  </p> -->
-                  <!-- <div v-else class="mt-1 flex items-center gap-x-1.5">
-                    <p class="text-xs/5 text-gray-400 text-green-400">Completed</p>
-                  </div> -->
-                  <!-- {{ lesson.videos }} -->
+                  <p class="text-sm/6 text-white"> {{ lesson.videos.length }} Lessons ( 33m ) </p>
                 </div>
               </DisclosureButton>
 
@@ -47,15 +39,13 @@
                 class="divide-y divide-gray-700 bg-gray-800 disclosure-panel" 
         
               >
-              <!-- {{ lesson.videos }} -->
                 <!-- Loop Children -->
                 <li 
                   v-for="videoItem in lesson.videos" :key="videoItem.id" 
                   class="flex justify-between gap-x-6 py-5 pl-6 pr-6 hover:bg-gray-700"
                 >
                   <DisclosureButton 
-                    as="a" 
-                    href="" 
+                    @click="$router.push(`/videos/${videoItem.UUID}`)" 
                     class="flex justify-between disclosure-button"
                   >
                     <div class="flex min-w-0 gap-x-4">
@@ -65,16 +55,17 @@
                       />
           
                       <div class="min-w-0 flex-auto">
-                        <p class="text-sm/6 font-semibold text-white">{{ videoItem.title }}</p>
-                        <!-- <p class="mt-1 truncate text-xs/5 text-gray-400">{{ item.email }}</p> -->
+                        <p class="text-sm/6 font-semibold text-white">{{ videoItem.name }}</p>
                       </div>
                     </div>
 
                     <div class="hidden shrink-0 sm:flex sm:flex-row sm:items-end">
                       <p class="mt-1 text-xs/5 text-gray-400">
-                        <!-- <span class="inline-flex items-center rounded-md bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-inset ring-green-500/20">
+                        <span class="inline-flex items-center rounded-md bg-green-500/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-inset ring-green-500/20"
+                          v-if="videoItem.completed"
+                        >
                           Watched
-                        </span> -->
+                        </span>
                       </p>
                       <p class="text-sm/6 text-white pl-2">{{ videoItem.duration }}</p>
                     </div>

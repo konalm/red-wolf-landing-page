@@ -36,23 +36,21 @@
   </div>
 
   <!-- BUTTONS -->
-  <CourseCTA @preview-click="scrollToPreview" @gotToCourseVideos="goToCourseVideos" />
+  <CourseCTA @preview-click="scrollToPreview" @gotToCourseVideos="goToCourseVideos" :userStartedCourse="course?.userStartedCourse" />
   
   <!-- What you will learn -->
   <LessonOutcomes :outcomes="course?.learningOutcomes" />
 
   <CoursePreview ref="previewSection" :videoId="course?.previewVideoId" />
 
-  <!-- <TOCV5 /> -->
   <TableOfContent :lessons="course?.lessons" />
 </template>
 
 <script setup lang="ts">
 import type { VideoCourse } from '~/src/types/videoCourse.types';
-import { getVideoCourse } from '~/src/http/course.http';
+import { getVideoCourse, getVideoCourseForUser } from '~/src/http/course.http';
 import CourseCTA from '~/src/components/CourseCTA.vue'
 import CoursePreview from '~/src/components/CoursePreview.vue'
-// import TOCV5 from '~/src/components/TOCV5.vue'
 import {
    ChartBarIcon, PlayCircleIcon, ClockIcon, ChatBubbleBottomCenterTextIcon, RectangleStackIcon,
    PencilSquareIcon,
@@ -99,7 +97,13 @@ async function uploadVideoCourse() {
 
   console.log('UUID ', uuid);
 
- course.value = await getVideoCourse(uuid as string);
+  const userLoggedIn = localStorage.getItem('auth_token')
+
+  course.value = userLoggedIn 
+    ? await getVideoCourseForUser(uuid as string) 
+    : await getVideoCourse(uuid as string);
+
+  console.log('response ------------------->');
 
   console.log('response ------------------->');
   console.log(course);
@@ -125,15 +129,4 @@ const goToCourseVideos = async () => {
 
   navigateTo(`/videos/${video.UUID}`);
 }
-
-// watch(
-//   () => route.params.uuid,
-//   async (newUuid) => {
-//     console.log('new UUID ', newUuid);
-//     if (newUuid) {
-//       await uploadVideoCourse()
-//     }
-//   },
-//   { immediate: true } // This will run on component creation too
-// )
 </script>
