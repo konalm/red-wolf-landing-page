@@ -1,15 +1,15 @@
 <template>
   <!-- HEADER -->
-<!-- <Header v-if="!isLoggedInMember()" /> -->
-  <Header />
-<!-- <HeaderMember v-if="isLoggedInMember()" /> -->
+<Header v-if="!isLoggedInMember()" />
+  <!-- <Header /> -->
+<HeaderMember v-if="isLoggedInMember()" />
 
   <!-- PAGE -->
   <!-- <RouterView /> -->
    <NuxtPage />
 
-  <!-- <Footer v-if="!isLoggedInMember()" /> -->
-  <Footer  />
+  <Footer v-if="!isLoggedInMember()" />
+  <!-- <Footer  /> -->
 </template>
 
 <script setup lang="ts">

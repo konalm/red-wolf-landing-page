@@ -20,3 +20,10 @@ export interface LoginFields {
   username: string
   password: string
 }
+
+export interface UserProfile {
+  username: string;
+  email: string;
+  subscriptionStatus: 'MEMBER' | 'GUEST';
+  discordId: string | null;
+}

@@ -49,7 +49,7 @@
                   <a href="#" :class="[active ? 'bg-gray-100 outline-hidden' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>
                 </MenuItem> -->
 
-                <MenuItem v-slot="{ active }">
+                <MenuItem v-slot="{ active }" v-on:click="handleLogout">
                   <a href="#" :class="[active ? 'bg-gray-100 outline-hidden' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign out</a>
                 </MenuItem>
               </MenuItems>
@@ -69,13 +69,18 @@
 
 <script setup lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon, ArrowTrendingUpIcon, UserIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, XMarkIcon, UserIcon } from '@heroicons/vue/24/outline'
+import { logout } from '../services/logout';
 
 const navigation = [
   { name: 'Member Courses', href: 'MemberCourses', current: true },
-  { name: 'Community', href: 'community', current: false },
-  { name: 'My Progress', href: 'progress', current: false },
+  { name: 'Community', href: 'membercommunity', current: false },
+  // { name: 'My Progress (coming soon)', href: 'progress', current: false },
 ]
 
 const mobileMenuOpen = ref(false)
+
+function handleLogout() {
+  logout();
+}
 </script>

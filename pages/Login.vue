@@ -124,7 +124,9 @@ async function submitLogin() {
 
   if (loginResponse?.token) {
     localStorage.setItem('auth_token', loginResponse.token)
-    router.push('/courses')
+    // router.push('/courses')
+    window.location.href = '/membercourses';
+
   }
 }
 
