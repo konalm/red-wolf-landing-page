@@ -17,4 +17,19 @@ import LearningMaterialList from '../src/components/LearningMaterialList.vue'
 import Stats from '../src/components/Stats.vue'
 import Questions from '../src/components/Questions.vue'
 import HomeVideo from '../src/components/HomeVideo.vue'
+
+useHead({
+  title: 'CodeMap',
+  meta: [
+    { name: 'description', content: 'CodeMap is a platform for learning to code.' }
+  ]
+})
+
+onBeforeMount(() => {
+  console.log('beforeMount')
+
+  if (localStorage.getItem('auth_token')) {
+    window.location.href = '/membercourses';
+  }
+})
 </script>

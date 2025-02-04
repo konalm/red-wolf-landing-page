@@ -92,8 +92,6 @@ import * as userHttp from '~/src/http/user.http'
 import { useRouter } from 'vue-router'
 import { XCircleIcon } from '@heroicons/vue/24/outline'
 
-const router = useRouter()
-
 const username = ref('')
 const password = ref('')
 
@@ -105,12 +103,7 @@ const errorFeedback = ref<{
   password: []
 })
 
-
 async function submitLogin() {
-  console.log('submit login ()')
-  console.log('username ', username)
-  console.log('password ', password)
-
   const loginResponse = await userHttp
     .login({
       username: username.value,
