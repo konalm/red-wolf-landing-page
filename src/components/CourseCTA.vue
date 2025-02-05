@@ -39,18 +39,26 @@
 
 <script setup lang="ts">
 import { CheckCircleIcon, PlayIcon, PlayCircleIcon } from '@heroicons/vue/20/solid'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+
 
 const props = defineProps<{
   userStartedCourse?: boolean;
 }>()
 
-
 const showPreview = ref(false)
 
-const buttonText = 'Start Watching'
 const secondaryButtonText = '1 minute preview of this course'
 
-
 const emit = defineEmits(['preview-click', 'gotToCourseVideos'])
+
+const buttonText = computed(() => {
+  const userLoggedIn = localStorage.getItem('auth_token');
+
+  if (!userLoggedIn) {
+    return 'Become a member to start course'
+  }
+
+  return props.userStartedCourse ? 'Continue Course' : 'Start Watching'
+})
 </script>

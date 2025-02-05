@@ -12,29 +12,6 @@
                 {{ course.name }}
               </p>
             </div>
-  
-            <Menu as="div" class="relative ml-auto">
-              <MenuButton class="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-100">
-                <span class="sr-only">Open options</span>
-                <EllipsisHorizontalIcon class="size-5" aria-hidden="true" />
-              </MenuButton>
-
-              <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                <MenuItems class="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-gray-700 py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                  <MenuItem v-slot="{ active }">
-                    <a href="#" :class="[active ? 'bg-gray-50 outline-none' : '', 'block px-3 py-1 text-sm/6 text-gray-900']"
-                      >View<span class="sr-only">, {{ course.name }}</span></a
-                    >
-                  </MenuItem>
-                  
-                  <MenuItem v-slot="{ active }">
-                    <a href="#" :class="[active ? 'bg-gray-50 outline-none' : '', 'block px-3 py-1 text-sm/6 text-gray-900']"
-                      >Edit<span class="sr-only">, {{ course.name }}</span></a
-                    >
-                  </MenuItem>
-                </MenuItems>
-              </transition>
-            </Menu>
           </div>
 
           <!-- <dl class="-my-3 divide-y divide-gray-700 px-6 py-4 text-sm/6"> -->
@@ -100,6 +77,52 @@
             </div>
           </dl>
         </li>
+
+        <!-- Upcoming Course -->
+         <li v-for="(course, index) in upcomingCourses" 
+          :key="index" 
+          class="overflow-hidden rounded-xl border border-gray-700 opacity-65"
+        >
+          <div class="relative flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-700 p-6">
+            <div class="absolute top-2 right-2">
+              <span class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-400 ring-1 ring-inset ring-yellow-400/20">
+                Coming Soon
+              </span>
+            </div>
+
+            <img :src="course.imagePath" class="size-12 flex-none rounded-lg bg-gray-700 object-cover ring-1 ring-gray-900/10" />
+
+            <div class="text-sm/6 font-medium text-gray-300">
+              <p> {{ course.name }} </p>
+            </div>
+          </div>
+
+          <!-- <dl class="-my-3 divide-y divide-gray-700 px-6 py-4 text-sm/6"> -->
+          <dl class="-my-3 px-6 py-4 text-sm/6">
+            <div class="divide-y divide-gray-700">
+              <div class="flex justify-between gap-x-4 py-3">
+                <dt class="text-gray-500">Difficultly Level</dt>
+                <dd class="flex items-start gap-x-2">
+                  <div class="font-medium text-gray-300">{{ course.difficultyLevel }}</div>
+                </dd>
+              </div>
+
+              <div class="flex justify-between gap-x-4 py-3">
+                <dt class="text-gray-500">Material</dt>
+                <dd class="text-gray-300">
+                  Video Series
+                </dd>
+              </div>
+    
+              <div class="flex justify-between gap-x-4 py-3">
+                <dt class="text-gray-500">Duration</dt>
+                <dd class="flex items-start gap-x-2">
+                  <div class="font-medium text-gray-300">{{ course.duration }} </div>
+                </dd>
+              </div>
+            </div>
+          </dl>
+        </li>
       </ul>
     </div>
   </div>
@@ -113,7 +136,7 @@ import * as courseHttp from '~/src/http/course.http'
 import type { MemberVideoCourse } from '~/src/types/videoCourse.types'
 import { VideoCameraIcon } from '@heroicons/vue/20/solid'
 import { getCourseVideoForUser } from '~/src/http/video.http';
-
+import { upcomingCourses } from '~/src/constants/upcomingCourses.constants';
 
 const courses = ref<Array<MemberVideoCourse>>([])
 

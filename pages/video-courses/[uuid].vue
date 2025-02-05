@@ -36,7 +36,9 @@
   </div>
 
   <!-- BUTTONS -->
-  <CourseCTA @preview-click="scrollToPreview" @gotToCourseVideos="goToCourseVideos" :userStartedCourse="course?.userStartedCourse" />
+  <CourseCTA @preview-click="scrollToPreview" @gotToCourseVideos="goToCourseVideos" 
+    :userStartedCourse="course?.userStartedCourse" 
+  />
   
   <!-- What you will learn -->
   <LessonOutcomes :outcomes="course?.learningOutcomes" />
@@ -102,12 +104,6 @@ async function uploadVideoCourse() {
   course.value = userLoggedIn 
     ? await getVideoCourseForUser(uuid as string) 
     : await getVideoCourse(uuid as string);
-
-  console.log('response ------------------->');
-
-  console.log('response ------------------->');
-  console.log(course);
-  console.log('<--------------------------------');
 }
 
 const scrollToPreview = () => {
@@ -119,6 +115,13 @@ const scrollToPreview = () => {
 
 const goToCourseVideos = async () => {
   console.log('go to course videos');
+
+  const userLoggedIn = localStorage.getItem('auth_token')
+
+  if (!userLoggedIn) {
+    navigateTo('/signup')
+    return
+  }
 
   const uuid = route.params.uuid
 

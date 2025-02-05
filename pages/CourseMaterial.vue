@@ -1,145 +1,110 @@
 <template>
   <div class="bg-gray-800 sm:py-32 flex justify-center items-center">
-    <div class="mx-auto max-w-5xl px-6 lg:px-8">
-      <nav aria-label="Progress">
-        <ol role="list" class="overflow-hidden">
-          <li v-for="(step, stepIdx) in steps" :key="step.name" :class="[stepIdx !== steps.length - 1 ? 'pb-10' : '', 'relative']">
-            <template v-if="step.status === 'complete'">
-              <div v-if="stepIdx !== steps.length - 1" 
-                class="absolute top-4 left-4 mt-0.5 -ml-px h-full w-0.5 bg-indigo-600" 
-                aria-hidden="true" 
-              />
-                <a :href="step.href" 
-                  class="group relative flex items-start"
-                >
-                  <span class="flex h-9 items-center">
-                    <span class="relative z-10 flex size-8 items-center justify-center rounded-full bg-indigo-600 group-hover:bg-indigo-800">
-                      <CheckIcon class="size-5 text-white" aria-hidden="true" />
-                    </span>
-                  </span>
+    <div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-10 lg:max-w-6xl lg:px-8">
+      <h2 class="sr-only">Products</h2>
 
-                  <span class="ml-4 flex min-w-0 flex-col">
-                    <span class="text-sm font-medium text-gray-300">Step {{ stepIdx + 1 }} - {{ step.name }}</span>
-                    <ul class="list-disc list-inside">
-                      <li class="text-sm text-gray-400" v-for="(description, index) in step.descriptions" :key="index">{{ description }}</li>
-                    </ul>
-                  </span>
-                </a>
-              </template>
+      <div class="grid grid-cols-1 gap-y-4 sm:grid-cols-1 sm:gap-x-6 sm:gap-y-4 lg:grid-cols-3 lg:gap-x-8">
+        <div v-for="product in products" 
+          :key="product.id" 
+          class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200"
+          :class="[product.comingSoon ? 'bg-gray-300' : 'bg-white']"
+        >
+          <div v-if="product.comingSoon" class="absolute right-2 top-2 z-10">
+            <span class="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-800 ring-1 ring-inset ring-gray-500/10">
+              Coming Soon
+            </span>
+          </div>
 
-              <template v-else-if="step.status === 'current'">
-                <div v-if="stepIdx !== steps.length - 1" class="absolute top-4 left-4 mt-0.5 -ml-px h-full w-0.5 bg-gray-300" aria-hidden="true" />
-                <a :href="step.href" class="group relative flex items-start" aria-current="step">
-                  <span class="flex h-9 items-center" aria-hidden="true">
-                    <span class="relative z-10 flex size-8 items-center justify-center rounded-full border-2 border-indigo-600 bg-white">
-                      <span class="size-2.5 rounded-full bg-indigo-600" />
-                    </span> 
-                  </span>
-                  <span class="ml-4 flex min-w-0 flex-col">
-                    <span class="text-sm font-medium text-gray-300">Step {{ stepIdx + 1 }} - {{ step.name }}</span>
-                    <ul class="list-disc list-inside">
-                      <li class="text-sm text-gray-400" v-for="(description, index) in step.descriptions" :key="index">{{ description }}</li>
-                    </ul>
-                  </span>
-                </a>
-              </template>
+          <img :src="product.imageSrc" 
+            :alt="product.imageAlt" 
+            class="aspect-3/4 w-full bg-gray-200 object-cover sm:aspect-auto sm:h-70"
+            :class="[product.comingSoon ? 'opacity-30' : '']"
+          />
 
-            <template v-else>
-              <div v-if="stepIdx !== steps.length - 1" class="absolute top-4 left-4 mt-0.5 -ml-px h-full w-0.5 bg-gray-300" aria-hidden="true" />
-              <a :href="step.href" class="group relative flex items-start">
-                <span class="flex h-9 items-center" aria-hidden="true">
-                  <span class="relative z-10 flex size-8 items-center justify-center rounded-full border-2 border-gray-300 bg-white group-hover:border-gray-400">
-                    <span class="size-2.5 rounded-full bg-transparent group-hover:bg-gray-300" />
-                  </span>
-                </span>
-                <span class="ml-4 flex min-w-0 flex-col">
-                  <span class="text-sm font-medium text-gray-300">Step {{ stepIdx + 1 }} - {{ step.name }}</span>
-                  <ul class="list-disc list-inside">
-                    <li class="text-sm text-gray-400" v-for="(description, index) in step.descriptions" :key="index">{{ description }}</li>
-                  </ul>
-                </span>
-              </a>
-            </template>
-          </li>
-        </ol>
-      </nav>
+          <div class="flex flex-1 flex-col space-y-2 p-4">
+            <h2 class="text-1xl font-medium text-gray-900"> {{ product.name }} </h2>
+
+            <p class="text-sm text-gray-500">{{ product.description }}</p>
+
+            <p class="text-sm text-gray-700" v-for="feature in product.features">
+              <b><CheckCircleIcon class="inline-block w-4 h-4 mr-1 text-green-500" /> {{ feature }}</b>
+            </p>
+        
+            <div class="flex flex-1 flex-col justify-end">
+              <p class="text-sm font-bold text-gray-900 mt-2">{{ product.price }}</p>
+              <button
+                v-if="!product.comingSoon"
+                type="button"
+                class="hover:cursor mt-4 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                v-on:click="goToCourse(product.courseId)"
+              >
+                View course
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { CheckIcon } from '@heroicons/vue/20/solid'
+<script setup lang="ts">
+import { CheckCircleIcon } from '@heroicons/vue/24/solid';
 
-const steps = [
+const products = [
   {
-    name: 'Learn the essentials of Frontend Development (still in progress)',
-    descriptions: [
-      'Learn JUST the essentials of HTML & CSS, stop watching 30 hours of videos!', 
-      'Master the fundamentals of JavaScript, the language of the web.',
-      'Learn what TypeScript is, how to use it & why it\'s useful.',
-      'Understand how JavaScript frameworks actually work, how to use them and learn Vue.JS',
+    id: 1,
+    name: 'JavaScript Fundamentals',
+    description: 'Are you ready to truly understand JavaScript? This course breaks down all the essential concepts you need to write real-world JavaScript, follow industry best practices, and confidently tackle coding interviews',
+    price: '£28.00 (Included with membership)',
+    features: [ 
+      '10 hours of video content',
+      'Best Practices',
+      'Interview Prep',
     ],
-    status: 'complete'
-  },
-  {
-    name: 'Complete Coding Challenges (still in progress)',
-    descriptions: [
-      'Complete coding challenges to reinforce your learning',
-      'Understanding how to use the fundamentals by actually solving practical problems',
-    ],
-    status: 'complete',
-  },
-  { 
-    name: 'Learn the essentials of Backend Development (coming March 2025)',
-    descriptions: [
-      'Take JavaScript to the Server with Node.js & Express.js',
-      'Build RESTful APIs with all the best practises',
-      'Learn how to use a database, such as Mysql, to store your data.',
-    ], 
-  status: 'current' 
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/512px-Unofficial_JavaScript_logo_2.svg.png?20141107110902',
+    imageAlt: 'JavaScript Fundamentals Course',
+    comingSoon: false,
+    courseId: '196c27a6-f923-43fc-8201-882c28d72b60'
   },
   {
-    name: 'Outside of code and everything in between (coming April 2025)',
-    descriptions: [
-      'Understand git & GitHub, how to use them to collaborate with others & manage your code',
-      'Learn the testing pyramid and the different strategies for testing your code',
+    id: 2,
+    name: 'CSS Essentials ',
+    description: 'CSS is a core skill for full-stack engineers, but you don’t need the extra fluff. This course covers only the essentials to help you build and structure modern web applications efficiently',
+    price: '£7.00 (Included with membership)',
+    features: [
+      '3 hours of video content',
+      'CSS Fundamentals',
+      'Layouts made simple',
+      'Responsive mobile first design',
+      'CSS Frameworks',
     ],
-    status: 'upcoming',
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/6/62/CSS3_logo.svg',
+    imageAlt: 'CSS Course',
+    comingSoon: true,
   },
-  { 
-    name: 'Learn how web apps work end to end (coming May 2025)', 
-    descriptions: [
-      'Learn how to build a full stack web app, from the server to the client.',
-      'Understand how all the parts work together, so you can build an entire app from scratch.',
+    {
+    id: 2,
+    name: 'HTML Essentials',
+    description: 'HTML is the backbone of web applications, and every full-stack engineer needs it. This course skips the fluff, focusing only on essential skills',
+    price: '£6.00 (Included with membership)',
+    features: [
+      '3 hours of video content',
+      'Learn just enough to start building without unnecessary complexity',
+      'How to write clean, semantic, and scalable HTML',
+      'Forms and Inputs',
     ],
-    status: 'upcoming' 
+    imageSrc: 'https://upload.wikimedia.org/wikipedia/commons/3/38/HTML5_Badge.svg',
+    imageAlt: 'HTML Course',
+    comingSoon: true,
   },
-  { 
-    name: 'Build Facebook, Instagram, Netflix, X and AirBnB clones (coming June 2025)', 
-    descriptions: [
-      'Build clones to really understand how complex apps work',
-      'Break down multiple parts of apps, understanding how they work together',
-      'Have fun learning to code by actually coding, the best way to learn!',
-      'Put all your skills learned into practice and making sure the knowledge sticks'
-    ],
-    status: 'upcoming' 
-  },
-  { 
-    name: 'Deploy your app (coming July 2025)', 
-    descriptions: [
-      'Learn how to deploy your app to the cloud',
-      'See how work out their on the internet for everyone to see and actually be able to use',
-      'Learn how to use a cloud provider, such as AWS, to host your app.',
-    ],
-    status: 'upcoming' 
-  },
-  {
-    name: 'Take on assignments, create you own apps and build your portfolio (coming August 2025)',
-    descriptions: [
-      'Take on assignments, create you own apps and build your portfolio',
-      'Learning to build your own app, its hard but that\'s what this course is all about.',
-      'We will be here, as part of the community, you will have support in building your app and taking on assignments'
-    ]
-  }
 ]
+
+function goToCourse(courseId: string | undefined) {
+  console.log('CLICKED GO TO COURSE !!!');
+
+  console.log('NAVIGATING TO', courseId)
+
+  navigateTo(`/video-courses/${courseId}`)
+}
 </script>

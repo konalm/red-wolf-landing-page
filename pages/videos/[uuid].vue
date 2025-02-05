@@ -210,16 +210,9 @@ const videoSrc = computed(() => {
 })
 
 async function uploadContent() {
-  console.log('UPLOAD CONTENT');
-
   const { uuid } = router.params;
 
-  console.log('VIDEO UUID', uuid);
-
   const { video: videoData, navigation: navigationData } = await getVideo(uuid as string)
-
-  console.log('VIDEO DATA', videoData);
-  console.log('NAVIGATION DATA', navigationData);
 
   video.value = videoData
   navigation.value = navigationData
